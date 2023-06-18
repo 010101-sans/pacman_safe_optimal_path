@@ -1,9 +1,10 @@
 import random, os
 
 matrix = None
+initial_position_of_P = None
 
 def setup():
-    global matrix
+    global matrix, initial_position_of_P
     
     matrix = [[' ' for _ in range(8)] for _ in range(8)]
     marked_places = set()
@@ -23,6 +24,7 @@ def setup():
         if (row,col) not in marked_places:
             matrix[row][col] = 'P'
             marked_places.add((row, col))
+            initial_position_of_P = (row, col)
             break
 
 # Print the matrix
