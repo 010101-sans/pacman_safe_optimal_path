@@ -9,7 +9,15 @@ def setup():
     matrix = [[' ' for _ in range(8)] for _ in range(8)]
     marked_places = set()
 
-    # Place 4 '*' at random row and column
+    # Place 4 'g' enimies at random row and column
+    for _ in range(4):
+        row = random.randint(0, 7)
+        col = random.randint(0, 7)
+        if (row, col) not in marked_places:
+            matrix[row][col] = 'g'
+            marked_places.add((row, col))
+
+    # Place 6 '*' at random row and column
     for _ in range(4):
         row = random.randint(0, 7)
         col = random.randint(0, 7)
@@ -27,6 +35,7 @@ def setup():
             initial_position_of_P = (row, col)
             break
 
+
 # Print the matrix
 def print_matrix():
     global matrix
@@ -37,7 +46,12 @@ def print_matrix():
         for ele in row:
             print(f" {ele} |", end="")
     print("\n+", "---+" * 8, sep="")
-    
-os.system("cls")
-setup()
-print_matrix()
+
+
+def main():
+    os.system("cls")
+    setup()
+    print_matrix()
+
+if __name__ == "__main__":
+    main()
