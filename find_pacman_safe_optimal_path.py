@@ -1,5 +1,4 @@
-import pprint
-import heapq
+import pprint, os, heapq
 
 def get_direction_symbol(prev_position, current_position):
     if current_position[0] < prev_position[0]:
@@ -15,8 +14,7 @@ def get_direction_symbol(prev_position, current_position):
 
 def print_path_in_grid(output_list):
     grid = [[' ' for _ in range(8)] for _ in range(8)]
-   
-   
+
     for i in range(len(output_list)):
         position = output_list[i]
         row, col = position
@@ -56,7 +54,7 @@ def dijkstra(grid, start, end):
 
         for neighbor in neighbors:
             neighbor_row, neighbor_col = neighbor
-            new_dist = dist + 1  # Assuming each movement has a cost of 1
+            new_dist = dist + 1  # Each movement has a cost of 1
 
             if new_dist < distance[neighbor_row][neighbor_col]:
                 distance[neighbor_row][neighbor_col] = new_dist
@@ -76,7 +74,6 @@ def backtrack_path(grid, start, end):
 
     path.append(start)
     path.reverse()
-
     return path
 
 def get_neighbors(grid, row, col):
@@ -93,7 +90,6 @@ def get_neighbors(grid, row, col):
 
     return neighbors
 
-# Create the grid
 grid = [[' ' for _ in range(8)] for _ in range(8)]
 grid[7][3] = 'P'
 
@@ -111,7 +107,7 @@ grid[5][4] = 'G'
 
 start = (7, 3)
 ends = [(0, 1), (1, 2), (2, 5), (4, 4), (5, 6), (6, 1)]
- 
+
 path = []
 for i in range(len(ends)):
     temp_path = dijkstra(grid, start, ends[i])
@@ -119,34 +115,105 @@ for i in range(len(ends)):
         path += temp_path[:-1]  # Exclude the last position since it will be visited in the next iteration
         start = ends[i]  # Update the starting position for the next iteration
 
-print("\033[2J\033[H", end="")
+os.system("cls")
 if path:
     path.append(ends[-1])  # Append the last 'F' position
     print_path_in_grid(path)
     print()
     pprint.pprint(path)
+    print(f"\nPath Length : {len(path)-1}\n")
 else:
     print("No valid path found.")
+
+
 
 ''' 
 
      0   1   2   3   4   5   6   7
    +---+---+---+---+---+---+---+---+
- 0 |   |   |   |   |   |   |   |   |
+ 0 |   | F |   |   |   |   |   |   |
    +---+---+---+---+---+---+---+---+
- 1 |   |   |   |   |   |   |   |   |
+ 1 |   | G | F |   |   |   |   |   |
    +---+---+---+---+---+---+---+---+
- 2 |   |   |   |   |   |   |   |   |
+ 2 |   |   |   |   |   | F |   |   |
    +---+---+---+---+---+---+---+---+
- 3 |   |   |   |   |   |   |   |   |
+ 3 |   |   | G |   |   |   |   |   |
    +---+---+---+---+---+---+---+---+
- 4 |   |   |   |   |   |   |   |   |
+ 4 |   |   |   |   | F |   |   |   |
    +---+---+---+---+---+---+---+---+
- 5 |   |   |   |   |   |   |   |   |
+ 5 |   |   | G |   | G |   | F |   |
    +---+---+---+---+---+---+---+---+
- 6 |   |   |   |   |   |   |   |   |
+ 6 | F |   |   |   |   |   |   |   |
    +---+---+---+---+---+---+---+---+
- 7 |   |   |   |   |   |   |   |   |
+ 7 |   |   |   | P |   |   |   |   |
    +---+---+---+---+---+---+---+---+
+
+
+[(7, 3),
+(6, 3),
+(5, 3),
+(4, 3),
+(3, 3),
+(2, 3),
+(1, 3),
+(0, 3),
+(0, 2),
+(0, 1),
+(0, 2),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 5),
+(2, 4),
+(3, 4),
+(4, 4),
+(4, 5),
+(4, 6),
+(5, 6),
+(5, 5),
+(6, 5),
+(6, 4),
+(6, 3),
+(6, 2),
+(6, 1)]
+
+
+    The time complexity of the code can be analyzed based on the major operations and loops
+    present in the code :
+
+    >>> Constructing the grid: 
+        - This operation takes constant time as the grid size is fixed (8x8).
+
+    >>> Dijkstra's algorithm:
+
+        >>> Initializing distance matrix: 
+            - This operation takes O(rows * cols) time, where rows and cols are the dimensions of the grid.
+
+        >>> Initializing heap: 
+            - This operation takes O(log V) time, where V is the number of vertices (cells) in the grid.
+
+        >>> Main loop: 
+        
+            - The loop runs until the heap is empty, which can take a maximum of V iterations. 
+        
+            - Within each iteration:
+                - Extracting the minimum distance node from the heap takes O(log V) time.
+                - Finding neighbors of a node takes constant time since there are only four possible neighbors.
+                - Updating the distance and pushing nodes to the heap take O(log V) time.
+        
+            Therefore, the overall time complexity of Dijkstra's algorithm :
+                O((rows * cols) + V * (log V + log V)) = O(V * log V).
+
+    >>> Backtracking the path: 
+        - This operation takes O(V) time, as it traverses the path from the end to the start.
+
+    >>> Printing the grid: 
+        - Constructing the grid for printing takes constant time
+        - Printing each element takes constant time. 
+        - Therefore, the time complexity of grid printing is also constant.
+
+    >>> Overall, the dominant factor in terms of time complexity is Dijkstra's algorithm, 
+        which has a time complexity of O(V * log V).
 
 '''
